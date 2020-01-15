@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.SurveyDetailMapper">
+    
+    <resultMap type="SurveyDetail" id="SurveyDetailResult">
+        <result property="id"    column="id"    />
+        <result property="surveyUserId"    column="survey_user_id"    />
+        <result property="satisfication"    column="satisfication"    />
+        <result property="transfer"    column="transfer"    />
+        <result property="consideration"    column="consideration"    />
+        <result property="status"    column="status"    />
+        <result property="context"    column="context"    />
+        <result property="isDeleted"    column="is_deleted"    />
+    </resultMap>
+
+    <sql id="selectSurveyDetailVo">
+        select id, survey_user_id, satisfication, transfer, consideration, status, context, is_deleted from survey_detail
+    </sql>
+
+    <select id="selectSurveyDetailList" parameterType="SurveyDetail" resultMap="SurveyDetailResult">
+        <include refid="selectSurveyDetailVo"/>
+        <where>  
+            <if test="surveyUserId != null "> and survey_user_id = #{surveyUserId}</if>
+            <if test="satisfication != null "> and satisfication = #{satisfication}</if>
+            <if test="transfer != null "> and transfer = #{transfer}</if>
+            <if test="consideration != null "> and consideration = #{consideration}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="context != null  and context != ''"> and context = #{context}</if>
+            <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
+        </where>
+    </select>
+    
+    <select id="selectSurveyDetailById" parameterType="Long" resultMap="SurveyDetailResult">
+        <include refid="selectSurveyDetailVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSurveyDetail" parameterType="SurveyDetail" useGeneratedKeys="true" keyProperty="id">
+        insert into survey_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="surveyUserId != null ">survey_user_id,</if>
+            <if test="satisfication != null ">satisfication,</if>
+            <if test="transfer != null ">transfer,</if>
+            <if test="consideration != null ">consideration,</if>
+            <if test="status != null ">status,</if>
+            <if test="context != null  and context != ''">context,</if>
+            <if test="isDeleted != null ">is_deleted,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="surveyUserId != null ">#{surveyUserId},</if>
+            <if test="satisfication != null ">#{satisfication},</if>
+            <if test="transfer != null ">#{transfer},</if>
+            <if test="consideration != null ">#{consideration},</if>
+            <if test="status != null ">#{status},</if>
+            <if test="context != null  and context != ''">#{context},</if>
+            <if test="isDeleted != null ">#{isDeleted},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSurveyDetail" parameterType="SurveyDetail">
+        update survey_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="surveyUserId != null ">survey_user_id = #{surveyUserId},</if>
+            <if test="satisfication != null ">satisfication = #{satisfication},</if>
+            <if test="transfer != null ">transfer = #{transfer},</if>
+            <if test="consideration != null ">consideration = #{consideration},</if>
+            <if test="status != null ">status = #{status},</if>
+            <if test="context != null  and context != ''">context = #{context},</if>
+            <if test="isDeleted != null ">is_deleted = #{isDeleted},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSurveyDetailById" parameterType="Long">
+        delete from survey_detail where id = #{id}
+    </delete>
+
+    <delete id="deleteSurveyDetailByIds" parameterType="String">
+        delete from survey_detail where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

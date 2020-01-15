@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.SurveyCouponMapper">
+    
+    <resultMap type="SurveyCoupon" id="SurveyCouponResult">
+        <result property="id"    column="id"    />
+        <result property="coupon"    column="coupon"    />
+        <result property="isUsed"    column="is_used"    />
+    </resultMap>
+
+    <sql id="selectSurveyCouponVo">
+        select id, coupon, is_used from survey_coupon
+    </sql>
+
+    <select id="selectSurveyCouponList" parameterType="SurveyCoupon" resultMap="SurveyCouponResult">
+        <include refid="selectSurveyCouponVo"/>
+        <where>  
+            <if test="coupon != null  and coupon != ''"> and coupon = #{coupon}</if>
+            <if test="isUsed != null "> and is_used = #{isUsed}</if>
+        </where>
+    </select>
+    
+    <select id="selectSurveyCouponById" parameterType="Long" resultMap="SurveyCouponResult">
+        <include refid="selectSurveyCouponVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSurveyCoupon" parameterType="SurveyCoupon" useGeneratedKeys="true" keyProperty="id">
+        insert into survey_coupon
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="coupon != null  and coupon != ''">coupon,</if>
+            <if test="isUsed != null ">is_used,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="coupon != null  and coupon != ''">#{coupon},</if>
+            <if test="isUsed != null ">#{isUsed},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSurveyCoupon" parameterType="SurveyCoupon">
+        update survey_coupon
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="coupon != null  and coupon != ''">coupon = #{coupon},</if>
+            <if test="isUsed != null ">is_used = #{isUsed},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSurveyCouponById" parameterType="Long">
+        delete from survey_coupon where id = #{id}
+    </delete>
+
+    <delete id="deleteSurveyCouponByIds" parameterType="String">
+        delete from survey_coupon where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
